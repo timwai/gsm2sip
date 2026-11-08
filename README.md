@@ -35,8 +35,28 @@ silent.  Four chip families do it, each in its own way:
 The S10e was listed here as impossible for a long time: its audio HAL has no
 telephony path at all.  It now works by going past the HAL, straight to the
 DSP — see [The Galaxy S10e](#the-galaxy-s10e-past-the-hal-through-the-abox).
-The Magisk module makes the app a privileged system app, grants what it needs
-on a headless phone, and ships the root tools and the S10e's kernel module.
+The Magisk and KernelSU modules make the app a privileged system app, grant what
+it needs on a headless phone, and ship the root tools and device-specific
+helpers. The KernelSU port for Xiaomi 12S Ultra (thor) is experimental; see
+[KernelSU installation](#kernelsu-installation-thor).
+
+## KernelSU installation (thor)
+
+This fork includes a KernelSU module for the Xiaomi 12S Ultra (thor / SM8475),
+built for ARM64 Android 15.
+
+1. Install KernelSU and a compatible system metamodule such as Meta-OverlayFS.
+2. Install the `gsm2sip-kernelsu` ZIP from KernelSU Manager (not custom recovery).
+3. Reboot, then grant root to Gateway in KernelSU Manager.
+4. Configure the SIP account and test call audio in both directions.
+
+**Important:** thor's two-way GSM audio path is not yet verified. SIP
+registration or a connected call does not prove that the audio bridge works.
+The module deliberately uses the generic Qualcomm profile rather than
+borrowing mixer settings from another SoC.
+
+Build with `./build-kernelsu.sh`; details and signing-key setup are in
+[`kernelsu/README.md`](kernelsu/README.md).
 
 ## Audio Codec
 
@@ -150,8 +170,8 @@ tools/check-device.sh [adb-serial]
 ```
 
 The audio-policy check needs no root, so a phone can be vetted before rooting
-it.  The HAL and mixer checks need Magisk with Superuser access set to
-"Apps and ADB".
+it.  The HAL and mixer checks need root; grant the app root in KernelSU Manager or
+Magisk.
 
 What has actually been checked so far:
 
