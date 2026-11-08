@@ -24,16 +24,9 @@ jobs:
 
       - name: Set up Android SDK
         uses: android-actions/setup-android@v3
-        with:
-          packages: platform-tools
 
       - name: Install Android SDK packages
-        run: sdkmanager "platforms;android-34" "build-tools;34.0.0"
-
-      - name: Set up Gradle
-        uses: gradle/actions/setup-gradle@v4
-        with:
-          gradle-version: '8.5'
+        run: sdkmanager "platform-tools" "platforms;android-34" "build-tools;34.0.0"
 
       - name: Set up Go
         uses: actions/setup-go@v5
@@ -41,17 +34,22 @@ jobs:
           go-version: '1.23.x'
 
       - name: Build KernelSU module ZIP
+        env:
+          GSM2SIP_KEYSTORE_BASE64: ${{ secrets.GSM2SIP_KEYSTORE_BASE64 }}
+          GSM2SIP_KEYSTORE_PASSWORD: ${{ secrets.GSM2SIP_KEYSTORE_PASSWORD }}
+          GSM2SIP_KEY_ALIAS: ${{ secrets.GSM2SIP_KEY_ALIAS }}
+          GSM2SIP_KEY_PASSWORD: ${{ secrets.GSM2SIP_KEY_PASSWORD }}
         run: |
-          chmod +x build-kernelsu.sh
+          chmod +x build-kernelsu.sh gradlew
           ./build-kernelsu.sh
 
       - name: Upload installable ZIP
         uses: actions/upload-artifact@v4
         with:
-          name: gsm2sip-kernelsu-thor-v1.4.18
+          name: gsm2sip-kernelsu-thor-v1.4.18-ksu2
           path: |
-            dist/gsm2sip-kernelsu-thor-v1.4.18.zip
-            dist/gsm2sip-kernelsu-thor-v1.4.18.zip.sha256
+            dist/gsm2sip-kernelsu-thor-v1.4.18-ksu2.zip
+            dist/gsm2sip-kernelsu-thor-v1.4.18-ksu2.zip.sha256
             dist/build-manifest.txt
           if-no-files-found: error
           retention-days: 30
