@@ -325,9 +325,9 @@ data class DeviceProfile(
          * Resolved path to tinymix binary.  Empty string if not found.
          *
          * Checked paths (in order):
-         *   /data/local/tmp/tinymix   (Magisk module installs here — permissive SELinux)
+         *   /data/local/tmp/tinymix   (KernelSU module installs here — permissive SELinux)
          *   /vendor/bin/tinymix
-         *   /system/bin/tinymix       (Magisk overlay — may lack +x or SELinux context)
+         *   /system/bin/tinymix       (system overlay — may lack +x or SELinux context)
          *   /system/xbin/tinymix
          *
          * Falls back to `which tinymix` in the root shell PATH.
