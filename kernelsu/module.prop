@@ -1,6 +1,6 @@
 id=gsm2sip-kernelsu
 name=gsm2sip - KernelSU
-version=v1.4.18-ksu1
-versionCode=457
+version=v1.4.18-ksu2
+versionCode=458
 author=timwai
-description=KernelSU module for gsm2sip: privileged Gateway APK and ARM audio tools. Thor audio routing remains experimental.
+description=KernelSU module for gsm2sip: privileged Gateway APK and ARM64 audio tools. Thor audio routing remains experimental.
