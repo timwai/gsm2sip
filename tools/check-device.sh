@@ -106,7 +106,7 @@ esac
 echo
 echo "=== 2. Audio HAL ==="
 if ! have_root; then
-    unk "needs root — enable Magisk Superuser access = 'Apps and ADB', then"
+    unk "needs root — grant root to Gateway in KernelSU Manager, then"
     echo "            run 'adb shell su -c id' once and grant the prompt"
 elif [ $FAMILY = tensor ]; then
     # The AoC HAL is not string-probed: its routes are all in the policy and
@@ -139,7 +139,7 @@ if ! have_root; then
 else
     TM=$(find_tinymix)
     if [ -z "$TM" ]; then
-        unk "tinymix not present — push magisk/tinymix to /data/local/tmp/ (chmod 755)"
+        unk "tinymix not present — install the gsm2sip KernelSU module, or push a matching-ABI tinymix to /data/local/tmp/"
     else
         M=$(su_ "$TM")
         case $FAMILY in
