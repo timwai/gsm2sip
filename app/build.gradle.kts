@@ -15,19 +15,18 @@ android {
         versionName = "1.4.18"
     }
 
-    // A release build is signed with the same debug key the debug build uses.
-    // That is deliberate: it keeps the signature identical, so a release APK can
-    // replace a debug one inside the Magisk module without PackageManager
-    // rejecting it for a signature mismatch.  The point of building release here
-    // is not secrecy, it is `debuggable=false` — ART compiles a debuggable app in
-    // a deoptimizable mode with much weaker inlining, which costs real CPU in the
-    // per-frame audio loops.
+    // Use one stable signing key for debug/release and module upgrades.
+    // CI can provide a dedicated keystore through environment variables.
+    // Local builds fall back to the standard Android debug keystore.
     signingConfigs {
         create("shared") {
-            storeFile = file(System.getProperty("user.home") + "/.android/debug.keystore")
-            storePassword = "android"
-            keyAlias = "androiddebugkey"
-            keyPassword = "android"
+            storeFile = file(
+                System.getenv("GSM2SIP_KEYSTORE_PATH")
+                    ?: (System.getProperty("user.home") + "/.android/debug.keystore")
+            )
+            storePassword = System.getenv("GSM2SIP_KEYSTORE_PASSWORD") ?: "android"
+            keyAlias = System.getenv("GSM2SIP_KEY_ALIAS") ?: "androiddebugkey"
+            keyPassword = System.getenv("GSM2SIP_KEY_PASSWORD") ?: "android"
         }
     }
 
