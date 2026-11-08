@@ -11,7 +11,7 @@ import java.util.concurrent.LinkedBlockingQueue
 
 /**
  * Persistent root shell — opens `su` once and reuses it for all commands.
- * Eliminates repeated Magisk superuser popups.
+ * Eliminates repeated superuser authorization prompts.
  *
  * Usage:
  *   RootShell.exec("appops set --uid com.callagent.gateway RECORD_AUDIO allow")
@@ -75,7 +75,7 @@ object RootShell {
         denied = true
         val msg = "ROOT DENIED by the superuser manager ($detail) — mixer routing " +
             "and appops grants are unavailable, so calls will answer with no audio. " +
-            "Grant root to this app in Magisk; it is picked up on the next call, " +
+            "Grant root to this app in KernelSU Manager; it is picked up on the next call, " +
             "with no restart needed."
         Log.e(TAG, msg)
         statusCallback?.invoke(msg)
