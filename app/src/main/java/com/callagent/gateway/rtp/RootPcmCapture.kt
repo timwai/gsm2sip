@@ -148,7 +148,7 @@ class RootPcmCapture(
 
     companion object {
         private const val TAG = "RootPcmCapture"
-        /** Where the Magisk module's service.sh installs it. */
+        /** Where the KernelSU module's service.sh installs it. */
         const val TINYCAP = "/data/local/tmp/tinycap"
 
         /** Hamming-windowed sinc low-pass with its cutoff just under the
