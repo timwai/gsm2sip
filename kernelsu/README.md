@@ -2,7 +2,7 @@
 
 This module packages the upstream gsm2sip Android APK as a privileged system
 app and deploys the matching ARM audio helper binaries. It is intended for
-KernelSU with a compatible system-overlay provider (Meta-OverlayFS is suitable).
+KernelSU with a compatible system metamodule such as Meta-OverlayFS.
 
 ## Important: Xiaomi 12S Ultra (thor)
 
@@ -20,7 +20,7 @@ audio.
 ## Install
 
 1. Ensure KernelSU is installed and its module/overlay support is working.
-2. Install the ZIP from KernelSU Manager (not recovery).
+2. Install the ZIP from KernelSU Manager (not TWRP or another custom recovery).
 3. Reboot.
 4. Open KernelSU Manager and explicitly grant root to **gsm2sip / Gateway**.
 5. Open Gateway, grant any remaining Android permissions, choose the default
@@ -45,4 +45,4 @@ RECORD_AUDIO AppOp, and copies the audio helper binaries to
 ## Build
 
 Run `./build-kernelsu.sh` from the repository root. The output is written to
-`dist/gsm2sip-kernelsu-thor-v1.4.18.zip`.
+`dist/gsm2sip-kernelsu-thor-v1.4.18-ksu2.zip`.
