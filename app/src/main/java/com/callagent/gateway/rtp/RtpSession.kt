@@ -2252,7 +2252,7 @@ class RtpSession(
             Log.w(TAG, "appops RECORD_AUDIO not allowed [$probe] — re-granting")
             val t0 = System.currentTimeMillis()
             // Use execForOutput to capture stderr/stdout from appops commands.
-            // Previous approach hid all errors and put killall last (exit=1 always).
+            // Keep the final appops get in the command so the result is easy to verify.
             // Now: appops get --uid is the LAST command so exit code is meaningful,
             // and all errors are captured via 2>&1.
             // AUTO_REVOKE_PERMISSIONS_IF_UNUSED: Android 11+ (API 30)
