@@ -45,4 +45,23 @@ RECORD_AUDIO AppOp, and copies the audio helper binaries to
 ## Build
 
 Run `./build-kernelsu.sh` from the repository root. The output is written to
-`dist/gsm2sip-kernelsu-thor-v1.4.18-ksu2.zip`.
+`dist/gsm2sip-kernelsu-thor-v1.4.18-ksu2.zip`. The script builds the APK,
+cross-compiles the ARM64 helpers, validates the module layout, and writes a
+SHA-256 file.
+
+GitHub Actions also builds this ZIP on pushes to `kernelsu/thor-android15`
+and on manual workflow dispatch. If no signing secrets are configured, each
+CI run generates a temporary debug keystore; that ZIP is suitable for a fresh
+install, but a later ZIP may not be accepted as an in-place app update.
+
+For repeatable upgrades, configure these repository **Actions secrets before
+the first install**:
+
+- `GSM2SIP_KEYSTORE_BASE64`: base64-encoded PKCS12/JKS keystore
+- `GSM2SIP_KEYSTORE_PASSWORD`: keystore password
+- `GSM2SIP_KEY_ALIAS`: signing key alias
+- `GSM2SIP_KEY_PASSWORD`: signing key password
+
+The debug and release APKs use the same configured key. The signing key must
+also match any existing installed Gateway package if you want to update it
+without removing the old package update first.
