@@ -40,7 +40,7 @@ import java.util.concurrent.atomic.AtomicBoolean
  *   Exynos 9820: USAGE_VOICE_COMMUNICATION → STREAM_VOICE_CALL.
  *   Samsung HAL may route this into the modem uplink directly.
  *
- * The Magisk module disables Android's audio concurrency restrictions.
+ * The system module installs Gateway as a privileged app; device-specific audio routing remains controlled by DeviceProfile.
  * Uses G.722 codec for wideband (16 kHz), falls back to PCMA (G.711 A-law).
  */
 class RtpSession(
@@ -2239,13 +2239,9 @@ class RtpSession(
         try {
             val pkg = context.packageName
             val uidProbe = if (Build.VERSION.SDK_INT >= 29) "--uid " else ""
-            // Ask before acting.  The sequence below is eight root commands,
-            // two of them killing PermissionController, and pm/appops/cmd each
-            // fork an app_process; running it unconditionally every 15s cost
-            // hundreds of process launches across a single call to re-grant a
-            // permission that was already granted.  One `appops get` is cheap,
-            // and the expensive path now only runs when something really has
-            // revoked it — which is the situation it was written for.
+            // Ask before acting. One `appops get` is cheap; only re-grant
+            // this app's permission when it is actually denied. Never kill or
+            // disable PermissionController: it is a core Android component.
             val probe = RootShell.execForOutput(
                 "appops get ${uidProbe}$pkg RECORD_AUDIO 2>&1"
             )
@@ -2265,14 +2261,10 @@ class RtpSession(
                 "appops set $pkg AUTO_REVOKE_PERMISSIONS_IF_UNUSED ignore 2>&1; " else ""
             val uidFlag = if (Build.VERSION.SDK_INT >= 29) "--uid " else ""
             val result = RootShell.execForOutput(
-                "killall com.google.android.permissioncontroller 2>/dev/null; " +
-                "killall com.android.permissioncontroller 2>/dev/null; " +
                 "pm grant $pkg android.permission.RECORD_AUDIO 2>&1; " +
                 autoRevoke +
                 "appops set ${uidFlag}$pkg RECORD_AUDIO allow 2>&1; " +
                 "appops set $pkg RECORD_AUDIO allow 2>&1; " +
-                "killall com.google.android.permissioncontroller 2>/dev/null; " +
-                "killall com.android.permissioncontroller 2>/dev/null; " +
                 "appops get ${uidFlag}$pkg RECORD_AUDIO 2>&1"
             )
             val elapsed = System.currentTimeMillis() - t0
@@ -2563,7 +2555,7 @@ class RtpSession(
          *  anyway.  A capture read is one 20ms frame and the playback poll is
          *  18ms, so a healthy loop is gone well inside this. */
         private const val JOIN_TIMEOUT_MS = 400L
-        /** Installed by the Magisk module, next to tinymix. */
+        /** Installed by the KernelSU module, next to tinymix. */
         private const val TINYPCM = "/data/local/tmp/tinypcm"
         /** One raw PCM path per device: a session being replaced must finish
          *  its teardown before the next one routes. */
